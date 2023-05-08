@@ -3,11 +3,7 @@ import sequelize from '@/libs/mssql';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server';
 
-type Data = {
-  name: string,
-  url: string | null,
-  data: unknown
-}
+type Data = unknown
 
 const PLACEHOLDER_HOST = "https://localhost:3000"
 
@@ -18,11 +14,11 @@ const indexHandler = async (request: NextRequest, response: NextApiResponse<Data
   const dateFrom = searchParams.get("dateFrom")
   const dateTo = searchParams.get("dateTo")
   
-  // const [data, length] = await sequelize.query("SELECT * FROM dbo.tbl_carrera")
   try {
-    const [data, length] = await sequelize.query("SELECT * FROM dbo.Paises")
-  
-    response.status(200).json({ name: 'John Doe', url: "", data })
+    const QUERY = "SELECT * FROM dbo.Paises"
+    const [data] = await sequelize.query(QUERY)
+    
+    response.status(200).json(data)
     
   } catch (error) {
     

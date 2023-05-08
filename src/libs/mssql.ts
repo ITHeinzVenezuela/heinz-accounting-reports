@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize"
 import config from "../config"
 import tedious from "tedious"
 
-const { dbUser, dbPassword, dbHost, dbName } = config
+const { dbUser, dbPassword, dbHost, dbName, dbInstance } = config
 
 console.log("dbHost", dbHost);
 console.log("dbName", dbName);
@@ -14,6 +14,13 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   port: 1433,
   dialect: "mssql",
   dialectModule: tedious,
+  dialectOptions:{
+    options:{
+      instanceName: dbInstance,
+      trustServerCertificate: true, // change to true for local dev / self-signed certs,
+      encrypt: false,
+    }
+  }
 })
 
 export default sequelize;
