@@ -1,0 +1,22 @@
+.main_container{
+  display: grid;
+  grid-template-columns: minmax(320px, 768px);
+  justify-content: center;
+  
+  .brand-logo{
+    @apply w-full px-10;
+    max-width: 450px;
+  }
+  
+  form{
+    @apply px-5;
+    
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    
+    @screen sm{
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
