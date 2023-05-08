@@ -9,16 +9,20 @@ console.log("dbName", dbName);
 console.log("dbUser", dbUser);
 console.log("dbPassword", dbPassword);
 
+const MINUTE = 60 * 1000
+
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
   port: 1433,
   dialect: "mssql",
   dialectModule: tedious,
-  dialectOptions:{
-    options:{
+  dialectOptions: {
+    options: {
       instanceName: dbInstance,
       trustServerCertificate: true, // change to true for local dev / self-signed certs,
       encrypt: false,
+      connectTimeout: MINUTE / 2,
+      requestTimeout: 2 * MINUTE,
     }
   }
 })

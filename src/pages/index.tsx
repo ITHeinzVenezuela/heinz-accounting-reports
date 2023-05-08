@@ -8,36 +8,37 @@ import getJDEdwardsJulianDate from '@/utils/jde'
 import { FormEventHandler } from 'react'
 import { useState } from 'react'
 import Input from '@/components/widgets/Input'
+import axios from 'axios'
 
 const Home = () => {
 
-  useEffect(() => {
-
-    console.log("JDE Date: 2022-09-01", getJDEdwardsJulianDate("2022-09-01"));
-    console.log("JDE Date: 2023-04-30", getJDEdwardsJulianDate("2023-04-30"));
-
-  }, [])
-
-
   const [state, setState] = useState({
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: 0,
+    dateTo: 0,
   })
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { name, value } = event.currentTarget
-    
-    console.log(name, value);
-    
     setState({
       ...state,
-      [name]: value,
+      [name]: getJDEdwardsJulianDate(value),
     })
   }
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
-    const { currentTarget } = event
+    
+    console.log("form:", state);
+    
+    const API_URL = "/api/accounting-movements"
+    try {
+      
+      const response = await axios.post<Register[]>(API_URL, state)
+      console.log(response.data);
+      
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -64,6 +65,10 @@ const Home = () => {
             type="date"
             onChange={handleChange}
           />
+          
+          <button>
+            Traer Datos  
+          </button>
 
         </form>
 
