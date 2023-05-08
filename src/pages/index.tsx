@@ -27,11 +27,8 @@ const Home = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
-    
-    console.log("form:", state);
-    
-    const API_URL = "/api/accounting-movements"
     try {
+      const API_URL = "/api/accounting-movements"
       
       const response = await axios.post<Register[]>(API_URL, state)
       console.log(response.data);
