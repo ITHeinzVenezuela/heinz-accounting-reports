@@ -8,6 +8,7 @@ type Props = {
   className?: string,
   titleStyle?: string,
   autoComplete?: string,
+  disabled: boolean,
   onChange?: ChangeEventHandler<HTMLInputElement>
 }
 

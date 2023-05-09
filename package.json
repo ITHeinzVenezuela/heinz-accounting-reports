@@ -17,6 +17,7 @@
     "date-fns": "2.30.0",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.4",
+    "excel4node": "^1.8.2",
     "next": "13.3.4",
     "postcss": "8.4.23",
     "react": "18.2.0",
@@ -25,9 +26,11 @@
     "sequelize": "6.31.1",
     "tailwindcss": "3.3.2",
     "tedious": "16.0.0",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "xlsx": "0.18.5"
   },
   "devDependencies": {
-    "@types/tedious": "4.0.9"
+    "@types/tedious": "4.0.9",
+    "ts-node": "10.9.1"
   }
 }

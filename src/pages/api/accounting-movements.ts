@@ -18,13 +18,10 @@ const indexHandler = async (request: NextApiRequest, response: NextApiResponse<D
 
   const { dateFrom, dateTo }: BodyProps = request.body
 
-  // const dateFrom = searchParams.get("dateFrom")
-  // const dateTo = searchParams.get("dateTo")
-
   try {
     // const QUERY = "SELECT * FROM dbo.Paises"
 
-    const QUERY = `
+    const QUERY = ` 
       SELECT 
       GLCO as Compania ,
       GLICU as No_batch, 
@@ -57,12 +54,6 @@ const indexHandler = async (request: NextApiRequest, response: NextApiResponse<D
     `
     const [data] = await sequelize.query(QUERY)
     response.status(200).json(data)
-
-    // response.status(200).json({
-    //   ...request.body,
-    //   name: "Orlando",
-    //   lastname: "Mendoza",
-    // })
 
   } catch (error) {
 
