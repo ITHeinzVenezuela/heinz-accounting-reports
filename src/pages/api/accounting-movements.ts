@@ -8,15 +8,19 @@ type Data = unknown
 const PLACEHOLDER_HOST = "https://localhost:3000"
 
 type BodyProps = {
-  dateFrom: number;
-  dateTo: number;
+  dateFrom: number,
+  dateTo: number,
+  type: string,
 }
 
 const indexHandler = async (request: NextApiRequest, response: NextApiResponse<Data>) => {
 
   // const { searchParams } = new URL(`${PLACEHOLDER_HOST}${request.url}`);
 
-  const { dateFrom, dateTo }: BodyProps = request.body
+  const { dateFrom, dateTo, type }: BodyProps = request.body
+  console.log(type);
+  
+  const filterType = (type.length > 0) ? `and GLDCT in (''${type}'')` : ""
 
   try {
     // const QUERY = "SELECT * FROM dbo.Paises"
@@ -33,7 +37,6 @@ const indexHandler = async (request: NextApiRequest, response: NextApiResponse<D
       GLAN8 as N_DIR,
       GLEXA  as  DESCRIPCION, 
       CONVERT (numeric (18,2),(glaa/100)) as MONTO, 
-      GLUPMT as ULT_ACT,
       GLCRCD as MONEDA,
       GLTORG as USUARIO_ORG, 
       GLUSER as USUARIO_APROB,
@@ -43,8 +46,8 @@ const indexHandler = async (request: NextApiRequest, response: NextApiResponse<D
           select * from proddta.f0911 where GLCO 
           in (''07200'')
           and GLPOST in (''P'') 
-          and GLLT in (''AA'') 
-          and GLDCT in (''JE'') 
+          and GLLT in (''AA'')
+          ${filterType}
           and GLDGJ 
           between ${dateFrom} and ${dateTo} 
         '

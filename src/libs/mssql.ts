@@ -22,7 +22,7 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
       trustServerCertificate: true, // change to true for local dev / self-signed certs,
       encrypt: false,
       connectTimeout: MINUTE / 2,
-      requestTimeout: 2 * MINUTE,
+      requestTimeout: 5 * MINUTE,
     }
   }
 })

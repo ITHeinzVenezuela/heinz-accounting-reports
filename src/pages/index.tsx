@@ -13,7 +13,17 @@ import Input from '@/components/widgets/Input'
 import axios from 'axios'
 import Spinner from '@/components/widgets/Spinner'
 import Button from '@/components/widgets/Button'
+import Select from '@/components/widgets/Select'
 import NotificationModal from '@/components/widgets/NotificationModal'
+
+
+type registerType = "JE" | "PV" | "Todos"
+
+const types: SelectOptionsValue[] = [
+  { name: "JE", value: "JE" },
+  { name: "PV", value: "PV" },
+  { name: "Todos", value: "" },
+]
 
 const Home = () => {
 
@@ -29,6 +39,7 @@ const Home = () => {
   const [state, setState] = useState({
     dateFrom: "",
     dateTo: "",
+    type: "",
   })
 
   const openNotification = (notification: OpenNotificationProps): void => {
@@ -46,7 +57,7 @@ const Home = () => {
     })
   }
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (event) => {
     const { name, value } = event.currentTarget
     setState({
       ...state,
@@ -61,37 +72,47 @@ const Home = () => {
 
     const today = (new Date()).toISOString().substring(0, 10)
 
-    const { dateFrom, dateTo } = state
+    const { dateFrom, dateTo, type } = state
 
     const body = {
+      type,
       dateFrom: getJDEdwardsJulianDate(dateFrom),
       dateTo: getJDEdwardsJulianDate(dateTo),
     }
-
+    
+    
+    const NOT_TODAY = !(dateFrom === today && dateTo === today)
+    const NOT_GREATER_THAN_TODAY = (dateFrom <= today && dateTo <= today)
+    
     try {
-      if (
-        !(dateFrom === today && dateTo === today) &&
-        (dateFrom <= today && dateTo <= today)
-      ) {
-        
+      if (NOT_TODAY && NOT_GREATER_THAN_TODAY) {
+
         setLoading(true)
         const API_URL = "/api/accounting-movements"
 
         const response = await axios.post<Register[]>(API_URL, body)
         console.log(response.data);
-
-        const workbook = XLSX.utils.book_new()
-        const worksheet = XLSX.utils.json_to_sheet(response.data)
-
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Hoja 1")
-        XLSX.writeFile(workbook, `registros de movimientos contables (JE)(${dateFrom} - ${dateTo}).xlsx`)
-
-        openNotification({
-          type: "success",
-          title: "¡Excelente!",
-          message: "Se creado con éxito el archivo de registros contables",
-        })
         
+        if(response.data.length === 0){
+          openNotification({
+            type: "warning",
+            title: "¡Notificación!",
+            message: "No existe ningún registro contable correspondiente a los valores proporcionados",
+          })
+        }else{
+          const workbook = XLSX.utils.book_new()
+          const worksheet = XLSX.utils.json_to_sheet(response.data)
+  
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Hoja 1")
+          XLSX.writeFile(workbook, `registros de movimientos contables (${type})(${dateFrom} - ${dateTo}).xlsx`)
+          
+          openNotification({
+            type: "success",
+            title: "¡Excelente!",
+            message: "Se creado con éxito el archivo de registros contables",
+          })
+        }
+
       } else {
         openNotification({
           type: "warning",
@@ -99,10 +120,10 @@ const Home = () => {
           message: "Intervalo de fechas no valido. ¡Intelo de nuevo!",
         })
       }
-      
-      target.reset()
 
+      
     } catch (error) {
+      target.reset()
       console.log(error)
       openNotification({
         type: "danger",
@@ -127,7 +148,7 @@ const Home = () => {
 
         <form className="mt-10 sm:mt-20" onSubmit={handleSubmit} onInvalid={() => { }} action="">
           <h1 className="font-bold text-lg sm:text-2xl sm:col-start-1 sm:col-end-3">
-            Obtener registros de movimientos contables (JE)
+            Obtener registros de movimientos contables
           </h1>
 
           <Input
@@ -146,13 +167,23 @@ const Home = () => {
             onChange={handleChange}
           />
 
+          <Select
+            name="type"
+            options={types}
+            // value={id_equipo}
+            title="Tipo de movimiento contable"
+            defaultOption="Selecciona un tipo"
+            className="Select"
+            onChange={handleChange}
+          />
+
           <Button type="submit" loading={loading} noSpinner>
             Obtener Registros
           </Button>
 
           {
             loading &&
-            <span className="justify-self-center sm:col-start-1 sm:col-end-3 text-blue-500 font-bold">
+            <span className="loading-message">
               <Spinner size="small" badgeColor="fill-white" circleColor="fill-blue-500" />
               <span>Esto puede tardar varios minutos...</span>
             </span>

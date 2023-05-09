@@ -36,3 +36,8 @@ type OpenNotificationProps = Omit<NotificationProps, "show">
 interface NotificationModalProps extends NotificationProps {
   closeNotification: MouseEventHandler<HTMLButtonElement>
 }
+
+type SelectOptionsValue = {
+  name: string,
+  value: string,
+}
