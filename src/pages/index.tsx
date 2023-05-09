@@ -30,8 +30,16 @@ const Home = () => {
     dateFrom: "",
     dateTo: "",
   })
-  
-  const closeNotification: MouseEventHandler<HTMLButtonElement> = () =>{
+
+  const openNotification = (notification: OpenNotificationProps): void => {
+    setNotification({
+      ...notification,
+      show: true,
+    })
+    setTimeout(() => (closeNotification as () => void)(), 10000)
+  }
+
+  const closeNotification: MouseEventHandler<HTMLButtonElement> = () => {
     setNotification({
       ...notification,
       show: false,
@@ -51,6 +59,8 @@ const Home = () => {
 
     const target: any = event.target
 
+    const today = (new Date()).toISOString().substring(0, 10)
+
     const { dateFrom, dateTo } = state
 
     const body = {
@@ -59,31 +69,42 @@ const Home = () => {
     }
 
     try {
-      setLoading(true)
-      const API_URL = "/api/accounting-movements"
-      
-      const response = await axios.post<Register[]>(API_URL, body)
-      console.log(response.data);
-      
-      const workbook = XLSX.utils.book_new()
-      const worksheet = XLSX.utils.json_to_sheet(response.data)
+      if (
+        !(dateFrom === today && dateTo === today) &&
+        (dateFrom <= today && dateTo <= today)
+      ) {
+        
+        setLoading(true)
+        const API_URL = "/api/accounting-movements"
 
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Hoja 1")
-      XLSX.writeFile(workbook, `registros-de-movimientos-contables-(${dateFrom} - ${dateTo}).xlsx`)
+        const response = await axios.post<Register[]>(API_URL, body)
+        console.log(response.data);
 
+        const workbook = XLSX.utils.book_new()
+        const worksheet = XLSX.utils.json_to_sheet(response.data)
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Hoja 1")
+        XLSX.writeFile(workbook, `registros de movimientos contables (JE)(${dateFrom} - ${dateTo}).xlsx`)
+
+        openNotification({
+          type: "success",
+          title: "¡Excelente!",
+          message: "Se creado con éxito el archivo de registros contables",
+        })
+        
+      } else {
+        openNotification({
+          type: "warning",
+          title: "Advertencia",
+          message: "Intervalo de fechas no valido. ¡Intelo de nuevo!",
+        })
+      }
+      
       target.reset()
-      
-      setNotification({
-        show: true,
-        type: "success",
-        title: "¡Excelente!",
-        message: "Se creado con éxito el archivo de registros contables",
-      })
 
     } catch (error) {
       console.log(error)
-      setNotification({
-        show: true,
+      openNotification({
         type: "danger",
         title: "¡Error!",
         message: "Ha habido un error con la generación del archivo Excel. ¡Intente de nuevo!",
@@ -91,6 +112,7 @@ const Home = () => {
     } finally {
       setLoading(false)
     }
+
   }
 
   return (
@@ -105,7 +127,7 @@ const Home = () => {
 
         <form className="mt-10 sm:mt-20" onSubmit={handleSubmit} onInvalid={() => { }} action="">
           <h1 className="font-bold text-lg sm:text-2xl sm:col-start-1 sm:col-end-3">
-            Obtener registros de movimientos contables
+            Obtener registros de movimientos contables (JE)
           </h1>
 
           <Input
@@ -132,7 +154,7 @@ const Home = () => {
             loading &&
             <span className="justify-self-center sm:col-start-1 sm:col-end-3 text-blue-500 font-bold">
               <Spinner size="small" badgeColor="fill-white" circleColor="fill-blue-500" />
-              <span>Esto puede durar varios segundos...</span>
+              <span>Esto puede tardar varios minutos...</span>
             </span>
           }
 

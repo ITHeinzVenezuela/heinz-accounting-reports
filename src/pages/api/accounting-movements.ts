@@ -23,22 +23,21 @@ const indexHandler = async (request: NextApiRequest, response: NextApiResponse<D
 
     const QUERY = ` 
       SELECT 
-      GLCO as Compania ,
-      GLICU as No_batch, 
+      GLCO as COMPANIA ,
+      GLICU as NO_BATCH, 
       GLPN as PERIODO, 
-      GLDCT as Tipo,  
+      GLDCT as TIPO,  
       B.c6001ISO as FECHA,
-      -- GLDGJ as fechaJDE, 
-      GLDOC as Documento,
-      GLANI as Cuenta,
-      GLAN8 as N_Dir,
-      GLEXA  as  Descripcion, 
-      glaa as Monto, 
-      GLUPMT as Ult_Act,
-      GLCRCD as Moneda,
-      glexa , 
-      GLR1 as DocRef1, 
-      glicut as Tipo_Batch 
+      GLDOC as DOCUMENTO,
+      GLANI as CUENTA,
+      GLAN8 as N_DIR,
+      GLEXA  as  DESCRIPCION, 
+      CONVERT (numeric (18,2),(glaa/100)) as MONTO, 
+      GLUPMT as ULT_ACT,
+      GLCRCD as MONEDA,
+      GLTORG as USUARIO_ORG, 
+      GLUSER as USUARIO_APROB,
+      glicut as TIPO_BATCH 
       FROM openquery (jde, 
         '
           select * from proddta.f0911 where GLCO 

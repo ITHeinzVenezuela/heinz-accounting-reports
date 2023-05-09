@@ -31,6 +31,8 @@ type NotificationProps = {
   message: string,
 }
 
+type OpenNotificationProps = Omit<NotificationProps, "show">
+
 interface NotificationModalProps extends NotificationProps {
   closeNotification: MouseEventHandler<HTMLButtonElement>
 }
