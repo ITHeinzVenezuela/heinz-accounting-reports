@@ -23,3 +23,14 @@ type Register = {
   DocRef1: string,
   Tipo_Batch: string,
 }
+
+type NotificationProps = {
+  show: boolean,
+  type: "success" | "warning" | "danger",
+  title: string,
+  message: string,
+}
+
+interface NotificationModalProps extends NotificationProps {
+  closeNotification: MouseEventHandler<HTMLButtonElement>
+}

@@ -15,6 +15,32 @@ module.exports = {
       colors: {
         primary: "#e42221",
         secondary: "#17396d",
+
+        black: "#141414",
+        dark_grey: "#222327",
+        light_grey: "#9AA3AE",
+        
+        // Semantic Colors
+        error: {
+          light: "#D83232",
+          base: "#B01212",
+          dark: "#8C0000",
+        },
+        warning: {
+          light: "#FFDE81",
+          base: "#EFB008",
+          dark: "#976400",
+        },
+        info: {
+          light: "#4D82F3",
+          base: "#2563EB",
+          dark: "#0037B3",
+        },
+        success: {
+          light: "#419E6A",
+          base: "#00632B",
+          dark: "#00401C",
+        },
       }
     },
   },

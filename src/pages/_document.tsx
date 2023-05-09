@@ -6,6 +6,13 @@ export default function Document() {
       <Head />
       <body>
         <Main />
+
+        <>
+          {/* // Portales: // NO BORRAR!!! */}
+          <div id="modal"></div>
+          <div id="alert"></div>
+        </>
+
         <NextScript />
       </body>
     </Html>
