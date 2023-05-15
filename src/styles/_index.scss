@@ -31,7 +31,7 @@
     
     button{
       @apply py-2.5 px-4 mt-5 sm:mt-0 inline-flex justify-center items-center gap-2 rounded-md border border-transparent;
-      @apply  font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2;
+      @apply font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2;
       @apply focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm;
       @apply disabled:bg-slate-500;
     }
