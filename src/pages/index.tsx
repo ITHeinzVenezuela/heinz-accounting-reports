@@ -79,11 +79,11 @@ const Home = () => {
       dateFrom: getJDEdwardsJulianDate(dateFrom),
       dateTo: getJDEdwardsJulianDate(dateTo),
     }
-    
-    
+
+
     const NOT_TODAY = !(dateFrom === today && dateTo === today)
     const NOT_GREATER_THAN_TODAY = (dateFrom <= today && dateTo <= today)
-    
+
     try {
       if (NOT_TODAY && NOT_GREATER_THAN_TODAY) {
 
@@ -92,20 +92,20 @@ const Home = () => {
 
         const response = await axios.post<Register[]>(API_URL, body)
         console.log(response.data);
-        
-        if(response.data.length === 0){
+
+        if (response.data.length === 0) {
           openNotification({
             type: "warning",
             title: "¡Notificación!",
             message: "No existe ningún registro contable correspondiente a los valores proporcionados",
           })
-        }else{
+        } else {
           const workbook = XLSX.utils.book_new()
           const worksheet = XLSX.utils.json_to_sheet(response.data)
-  
+
           XLSX.utils.book_append_sheet(workbook, worksheet, "Hoja 1")
           XLSX.writeFile(workbook, `registros de movimientos contables (${type})(${dateFrom} - ${dateTo}).xlsx`)
-          
+
           openNotification({
             type: "success",
             title: "¡Excelente!",
@@ -121,7 +121,7 @@ const Home = () => {
         })
       }
 
-      
+
     } catch (error) {
       target.reset()
       console.log(error)
@@ -137,68 +137,72 @@ const Home = () => {
   }
 
   return (
-    <main className="min-h-screen py-20 sm:px-20" >
+    <>
+      <main className="min-h-screen" >
+        <section className="main_container sm:px-20 py-20">
 
-      <section className="main_container">
+          {/* <h1 className="font-bold text-2xl mb-10 uppercase">Obtener regsitros de movimientos contables</h1> */}
+          <div className="flex justify-center mx-5 sm:mx-0">
+            <KraftHeinz className='brand-logo' />
+          </div>
 
-        {/* <h1 className="font-bold text-2xl mb-10 uppercase">Obtener regsitros de movimientos contables</h1> */}
-        <div className="flex justify-center mx-5 sm:mx-0">
-          <KraftHeinz className='brand-logo' />
-        </div>
+          <form className="mt-10 sm:mt-20" onSubmit={handleSubmit} onInvalid={() => { }} action="">
+            <h1 className="font-bold text-lg sm:text-2xl sm:col-start-1 sm:col-end-3">
+              Obtener registros de movimientos contables
+            </h1>
 
-        <form className="mt-10 sm:mt-20" onSubmit={handleSubmit} onInvalid={() => { }} action="">
-          <h1 className="font-bold text-lg sm:text-2xl sm:col-start-1 sm:col-end-3">
-            Obtener registros de movimientos contables
-          </h1>
+            <Input
+              id="dateFrom"
+              title="Desde:"
+              type="date"
+              disabled={loading}
+              onChange={handleChange}
+            />
 
-          <Input
-            id="dateFrom"
-            title="Desde:"
-            type="date"
-            disabled={loading}
-            onChange={handleChange}
-          />
+            <Input
+              id="dateTo"
+              title="Hasta:"
+              type="date"
+              disabled={loading}
+              onChange={handleChange}
+            />
 
-          <Input
-            id="dateTo"
-            title="Hasta:"
-            type="date"
-            disabled={loading}
-            onChange={handleChange}
-          />
+            <Select
+              name="type"
+              options={types}
+              // value={id_equipo}
+              title="Tipo de movimiento contable"
+              defaultOption="Selecciona un tipo"
+              className="Select"
+              onChange={handleChange}
+            />
 
-          <Select
-            name="type"
-            options={types}
-            // value={id_equipo}
-            title="Tipo de movimiento contable"
-            defaultOption="Selecciona un tipo"
-            className="Select"
-            onChange={handleChange}
-          />
+            <Button type="submit" loading={loading} noSpinner>
+              Obtener Registros
+            </Button>
 
-          <Button type="submit" loading={loading} noSpinner>
-            Obtener Registros
-          </Button>
+            {
+              loading &&
+              <span className="loading-message">
+                <Spinner size="small" badgeColor="fill-white" circleColor="fill-blue-500" />
+                <span>Esto puede tardar varios minutos...</span>
+              </span>
+            }
 
-          {
-            loading &&
-            <span className="loading-message">
-              <Spinner size="small" badgeColor="fill-white" circleColor="fill-blue-500" />
-              <span>Esto puede tardar varios minutos...</span>
-            </span>
-          }
+            <NotificationModal
+              {...notification}
+              closeNotification={closeNotification}
+            />
 
-          <NotificationModal
-            {...notification}
-            closeNotification={closeNotification}
-          />
+          </form>
 
-        </form>
+        </section>
 
-      </section>
-
-    </main>
+        <footer className="px-5 py-4 bg-slate-100">
+          <span>© 2023 - KraftHeinz I.T. Venezuela 💻</span>
+        </footer>
+      </main>
+    </>
   )
 }
 
