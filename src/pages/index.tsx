@@ -15,6 +15,7 @@ import Spinner from '@/components/widgets/Spinner'
 import Button from '@/components/widgets/Button'
 import Select from '@/components/widgets/Select'
 import NotificationModal from '@/components/widgets/NotificationModal'
+import Head from 'next/head'
 
 
 type registerType = "JE" | "PV" | "Todos"
@@ -80,7 +81,6 @@ const Home = () => {
       dateTo: getJDEdwardsJulianDate(dateTo),
     }
 
-
     const NOT_TODAY = !(dateFrom === today && dateTo === today)
     const NOT_GREATER_THAN_TODAY = (dateFrom <= today && dateTo <= today)
 
@@ -138,6 +138,9 @@ const Home = () => {
 
   return (
     <>
+      <Head>
+        <title>Generador de Reportes Contables</title>
+      </Head>
       <main className="min-h-screen" >
         <section className="main_container sm:px-20 py-20">
 
