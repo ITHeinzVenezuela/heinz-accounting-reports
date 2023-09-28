@@ -7,7 +7,7 @@ const next = require('next')
 const dev = process.env.NODE_ENV
 
 const hostname = process.env.HOSTNAME
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 5050
 
 console.log("NODE_ENV ->", dev);
 console.log("PORT ->", port);
